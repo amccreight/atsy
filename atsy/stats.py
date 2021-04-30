@@ -4,7 +4,7 @@
 
 import mozinfo
 import psutil
-import StringIO
+import io
 from subprocess import Popen, PIPE
 
 
@@ -45,7 +45,7 @@ class ProcessStats:
             #
             #   path/to/exe --args etc
 
-            buf = StringIO.StringIO(output)
+            buf = io.StringIO(output)
             buf.readline()  # header
             for line in buf:
                 if line.strip():
@@ -81,10 +81,10 @@ class ProcessStats:
             exe = cmdline if verbose else p.exe()
 
             if self.parent_filter(cmdline):
-                print "[%d] - %s\n  * RSS - %d\n    USS - %d" % (p.pid, exe, rss, uss)
+                print(("[%d] - %s\n  * RSS - %d\n    USS - %d" % (p.pid, exe, rss, uss)))
                 parent_rss += rss
             else:
-                print "[%d] - %s\n    RSS - %d\n  * USS - %d" % (p.pid, exe, rss, uss)
+                print(("[%d] - %s\n    RSS - %d\n  * USS - %d" % (p.pid, exe, rss, uss)))
                 children_uss += uss
 
         if not parent_rss:
@@ -95,7 +95,7 @@ class ProcessStats:
                 raise ProcessNotFoundException(
                     "No process matched the parent filter")
 
-        print "\nTotal: {:,} bytes\n".format(parent_rss + children_uss)
+        print(("\nTotal: {:,} bytes\n".format(parent_rss + children_uss)))
 
 if __name__ == "__main__":
     # Simple adhoc test, not meant to really be used.

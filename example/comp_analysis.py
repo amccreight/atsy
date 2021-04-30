@@ -42,7 +42,7 @@ def test_browser(browser, stats, binary, urls,
         driver.quit()
     elif browser == 'Firefox':
         for count in process_count:
-            print "FIREFOX WITH %d CONTENT PROCESSES" % count
+            print(("FIREFOX WITH %d CONTENT PROCESSES" % count))
             test = FirefoxMultiTabTest(binary, stats, proxy=proxy, process_count=count, **test_options)
             test.open_urls(urls)
     elif browser in ('Safari', 'IE'):
@@ -55,9 +55,9 @@ def test_browser(browser, stats, binary, urls,
     elif browser == 'Edge':
         # Currently this is even more manual than IE and Safari. Edge won't
         # let us provide a path to launch.
-        print "Open up explorer, find 'atsy/example/comp_analysis_manual_test.htm'"
-        print "Right-click, 'Open with' -> 'Microsoft Edge'"
-        print "Run the test, press enter when it's done."
+        print("Open up explorer, find 'atsy/example/comp_analysis_manual_test.htm'")
+        print("Right-click, 'Open with' -> 'Microsoft Edge'")
+        print("Run the test, press enter when it's done.")
         import sys
         sys.stdin.read(1)
         stats.print_stats()
@@ -127,7 +127,7 @@ def main():
 
     # This loads |SETUP| and |TEST_SITES|.
     out = {}
-    execfile(cmdline.conf_file, {}, out)
+    exec(compile(open(cmdline.conf_file, "rb").read(), cmdline.conf_file, 'exec'), {}, out)
     TEST_SITES = out['TEST_SITES']
     SETUP = out['SETUP']
 

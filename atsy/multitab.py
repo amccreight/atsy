@@ -62,7 +62,7 @@ class ManualMultiTabTest(BaseMultiTabTest):
 
         p = subprocess.Popen([self.binary, manual_test_file], close_fds=True)
 
-        print "Do what the page says, then press enter when it's done loading the tests."
+        print("Do what the page says, then press enter when it's done loading the tests.")
         sys.stdin.read(1)
 
         self.stats.print_stats(verbose=True)
@@ -164,17 +164,17 @@ class FirefoxMultiTabTest(BaseMultiTabTest):
 
         test_path = os.path.join(MODULE_DIR, "test_memory_usage.py")
         try:
-            print "Marionette - running test"
+            print("Marionette - running test")
             runner.run_tests([test_path])
             failures = runner.failed
-        except Exception, e:
-            print e
+        except (Exception, e):
+            print(e)
             pass
 
         try:
             runner.cleanup()
-        except Exception, e:
-            print "Failed to cleanup"
+        except (Exception, e):
+            print("Failed to cleanup")
 
         # cleanup the profile dir if not already cleaned up
         if os.path.exists(profile.profile):
