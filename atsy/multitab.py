@@ -281,33 +281,12 @@ class MultiTabTest(BaseMultiTabTest):
         self.stats.print_stats()
 
     def open_urls(self, urls, tab_limit=MAX_TABS):
-        """
-        This works at least on Chrome across platforms.
-        """
-        # First setup a document with the target URLs.
-        link_doc = 'data:text/html,'
-        link_doc += '<html><head><title>Links!</title></head><body>'
-        id = 0
+        print("URLS " % urls)
+
+        # FIXME Why is there a weird blank data URL tab being opened first?
         for url in urls:
-            link_doc += '<a id="%d" href="%s">%d: %s</a><br>' % (
-                id, url, id, url)
-            id += 1
-
-        link_doc += '</body><html>'
-        self.driver.get(link_doc)
-
-        # Now open each document in a new tab by ctrl+shift clicking the
-        # anchor.
-        for tag in self.driver.find_elements_by_tag_name("a"):
-            action = ActionChains(self.driver)
-
-            if mozinfo.os == "mac":
-                ctrl_key = Keys.COMMAND
-            else:
-                ctrl_key = Keys.CONTROL
-
-            action.key_down(ctrl_key).key_down(Keys.SHIFT).click(
-                tag).key_up(Keys.SHIFT).key_up(ctrl_key).perform()
+            self.driver.switch_to.new_window("tab")
+            self.driver.get(url)
             time.sleep(self.per_tab_pause)
 
         time.sleep(self.settle_wait_time)
