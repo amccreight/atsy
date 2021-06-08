@@ -63,4 +63,15 @@ cd ..
   PATH=$PATH:. python atsy/example/comp_analysis.py
   ```
 
-**Note**: On OSX 10.10.5 you'll need to run the example under `sudo`. On OSX 10.10.11 you're going to need to disable [SIP](https://en.wikipedia.org/wiki/System_Integrity_Protection) most likely.
+**Note**: On OSX 10.10.5 you'll need to run the example under `sudo`. On OSX
+10.10.11 and later you're going to need to disable
+[SIP](https://en.wikipedia.org/wiki/System_Integrity_Protection).
+[Here](https://developer.apple.com/documentation/security/disabling_and_enabling_system_integrity_protection)
+are Apple's instructions on how to do that.
+
+OSX may also get mad because chromedriver isn't signed. You can go to System
+Preferences, then Security & Privacy, then the General tab and you'll see
+chromedriver and you can allow it.
+
+You will also need to edit atsy/example/comp_analysis_conf_simple.py to point to
+the right binaries.
