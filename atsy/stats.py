@@ -115,5 +115,17 @@ if __name__ == "__main__":
         stats = ProcessStats(lambda x: "firefox-trunk" in x,
                              lambda x: "plugin-container" not in x)
         stats.print_stats()
+    elif mozinfo.os == "mac":
+        # Get stats for any Chrome processes that are already running.
+        # I'm not sure what the AlertNotificationService is, but I guess I'll just take the USS for it.
+        stats = ProcessStats(lambda x: 'Google Chrome.app' in x,
+                             lambda x: 'Helpers' not in x and 'AlertNotificationService' not in x)
+
+        # The simplest test is running it on this process:
+        #stats = ProcessStats(lambda x: 'Python' in x,
+        #                     lambda x: True)
+
+        stats.print_stats()
+
     else:
-        raise Exception("Implement adhoc test for other platforms")
+        raise Exception("Implement adhoc test for " + mozinfo.os)
