@@ -6,7 +6,7 @@ An example script can be found under `example/comp_analysis.py`. It uses the [TP
 
 ### Prereqs
 - nginx (or some other webserver)
-- The latest [chromedriver](http://chromedriver.storage.googleapis.com/index.html)
+- The latest [chromedriver](https://chromedriver.chromium.org/)
 - Install **atsy**: `python setup.py install` should do the trick.
 - Install/update the browsers you want to test. Note installation locations.
   - Chrome - [devchannel](https://www.google.com/chrome/browser/desktop/index.html?platform=linux&extra=devchannel)
@@ -54,20 +54,20 @@ cd ..
 ```
 
 ### Running
-1. Launch nginx, I use the config from awsy, so something like:  
+1. Launch nginx, I use the config from awsy, so something like:
   ```
   nginx -p nginx_root/ -c conf/nginx.conf
   ```
-2. Launch the example, this assumes chromedriver is in the cwd:  
+2. Launch the example, this assumes chromedriver is in the cwd:
   ```
   PATH=$PATH:. python atsy/example/comp_analysis.py
   ```
 
 **Note**: On OSX 10.10.5 you'll need to run the example under `sudo`. On OSX
-10.10.11 and later you're going to need to disable
+10.10.11 and later you're going to also need to disable
 [SIP](https://en.wikipedia.org/wiki/System_Integrity_Protection).
-[Here](https://developer.apple.com/documentation/security/disabling_and_enabling_system_integrity_protection)
-are Apple's instructions on how to do that.
+Apple's instructions on how to do that are
+[here](https://developer.apple.com/documentation/security/disabling_and_enabling_system_integrity_protection).
 
 OSX may also get mad because chromedriver isn't signed. You can go to System
 Preferences, then Security & Privacy, then the General tab and you'll see
