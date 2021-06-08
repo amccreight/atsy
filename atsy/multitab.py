@@ -6,7 +6,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
-from marionette_harness.runtests import MarionetteTestRunner
 import mozinfo
 from mozlog.structured import commandline
 import mozprofile
@@ -76,6 +75,9 @@ class FirefoxMultiTabTest(BaseMultiTabTest):
     actual test implementation.
 
     This is based on the areweslimyet MarionetteTest.
+
+    FIXME The latest released Marionette version doesn't load in Python 3,
+    so remove that for now. Hopefully Webdriver now works with e10s enabled.
     """
 
     def __init__(self, binary, stats, process_count=1,
@@ -150,14 +152,17 @@ class FirefoxMultiTabTest(BaseMultiTabTest):
         # TODO(ER): Figure out how to turn on debug level info again
         #commandline.formatter_option_defaults['level'] = 'debug'
 
-        logger = commandline.setup_logging("MarionetteTest", {})
-        runner = MarionetteTestRunner(
-            binary=self.binary,
-            profile=profile,
-            logger=logger,
-            startup_timeout=60,
-            address="localhost:%d" % marionette_port,
-            gecko_log="gecko_%d.log" % self.process_count)
+        # FIXME
+        assert(False, "Fix the Firefox runner to use the standard one")
+
+        #logger = commandline.setup_logging("MarionetteTest", {})
+        #runner = MarionetteTestRunner(
+        #    binary=self.binary,
+        #    profile=profile,
+        #    logger=logger,
+        #    startup_timeout=60,
+        #    address="localhost:%d" % marionette_port,
+        #    gecko_log="gecko_%d.log" % self.process_count)
 
         # Add our testvars
         runner.testvars.update(testvars)
