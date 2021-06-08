@@ -22,9 +22,9 @@
 SETUP = {
     'mac': {
         'Firefox': {
-            'binary': '/Users/ericrahm/dev/mozilla-central/obj-x86_64-apple-darwin14.5.0-release/dist/Nightly.app/Contents/MacOS/firefox',
-            'parent_filter': lambda x: 'firefox' in x,
-            'path_filter': lambda x: '/Nightly.app/' in x
+            'binary': '/Applications/Firefox Nightly.app/Contents/MacOS/firefox',
+            'parent_filter': lambda x: not 'NightlyCP' in x,
+            'path_filter': lambda x: '/Firefox Nightly.app/' in x
         },
         'Chrome': {
             'binary': '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
