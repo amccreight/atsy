@@ -269,17 +269,6 @@ class MultiTabTest(BaseMultiTabTest):
 
         self.tabs.append(new_handle)
 
-    def open_urls_fx(self, urls, per_tab_pause=PER_TAB_PAUSE):
-        """
-        This seemed to work for non-e10s Firefox at one point.
-        """
-        for url in urls:
-            self.open_tab(url)
-            time.sleep(per_tab_pause)
-
-        time.sleep(SETTLE_WAIT_TIME)
-        self.stats.print_stats()
-
     def open_urls(self, urls, tab_limit=MAX_TABS):
         print("URLS " % urls)
 
