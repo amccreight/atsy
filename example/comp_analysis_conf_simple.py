@@ -78,7 +78,7 @@ SETUP = {
 
 # Example test sites.
 TEST_SITES = [
-    "https://www.google.com/#q=red+panda",
+    "https://www.google.com/search?q=red+panda",
     "https://yahoo.com",
     "http://cnn.com",
     "https://www.youtube.com/watch?v=DSehQsYU9h4",
