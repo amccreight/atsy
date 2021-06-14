@@ -27,9 +27,9 @@ SETUP = {
             'path_filter': lambda x: '/Nightly.app/' in x
         },
         'Chrome': {
-            'binary': '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary',
-            'parent_filter': lambda x: 'Google Chrome Helper' not in x,
-            'path_filter': lambda x: 'Google Chrome Canary.app' in x
+            'binary': '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+            'parent_filter': lambda x: 'Helpers' not in x and 'AlertNotificationService' not in x,
+            'path_filter': lambda x: 'Google Chrome.app' in x
         },
         'Safari': {
             'binary': '/Applications/Safari.app/Contents/MacOS/Safari',
