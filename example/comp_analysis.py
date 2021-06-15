@@ -11,8 +11,7 @@ from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 from atsy.stats import ProcessStats
-from atsy.multitab import (
-    FirefoxMultiTabTest, ManualMultiTabTest, MultiTabTest)
+from atsy.multitab import MultiTabTest
 
 
 def test_browser(browser, stats, binary, urls,
