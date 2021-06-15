@@ -50,22 +50,6 @@ def test_browser(browser, stats, binary, urls,
         test.open_urls(urls)
 
         driver.quit()
-    elif browser in ('Safari', 'IE'):
-        # Currently this is a manual test, sorry.
-        manual_test = os.path.abspath(os.path.join(
-            os.path.dirname(__file__), 'comp_analysis_manual_test.htm'))
-        test = ManualMultiTabTest(binary, stats, **test_options)
-        prefix = 'file://' if browser == 'IE' else ''
-        test.open_urls([prefix + manual_test])
-    elif browser == 'Edge':
-        # Currently this is even more manual than IE and Safari. Edge won't
-        # let us provide a path to launch.
-        print("Open up explorer, find 'atsy/example/comp_analysis_manual_test.htm'")
-        print("Right-click, 'Open with' -> 'Microsoft Edge'")
-        print("Run the test, press enter when it's done.")
-        import sys
-        sys.stdin.read(1)
-        stats.print_stats()
     else:
         raise Exception("Unhandled browser: %s" % browser)
 
@@ -90,13 +74,6 @@ def main():
 
     # Default browsers to test.
     default_browsers = [ 'Chrome', 'Firefox' ]
-
-    if mozinfo.os == 'win':
-        default_browsers.append('IE')
-        if mozinfo.version.startswith('10'):
-            default_browsers.append('Edge')
-    elif mozinfo.os == 'mac':
-        default_browsers.append('Safari')
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-b', action='append', dest='browsers',
