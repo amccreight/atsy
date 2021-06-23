@@ -243,8 +243,6 @@ class MultiTabTest(BaseMultiTabTest):
         self.tabs.append(new_handle)
 
     def open_urls(self, urls, tab_limit=MAX_TABS):
-        print("URLS " % urls)
-
         # FIXME Why is there a weird blank data URL tab being opened first?
         for url in urls:
             self.driver.switch_to.new_window("tab")
