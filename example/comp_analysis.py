@@ -10,7 +10,7 @@ import mozinfo
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-from atsy.stats import ProcessStats
+from atsy.stats import ProcessStatsHelper
 from atsy.multitab import MultiTabTest
 
 
@@ -53,18 +53,20 @@ def test_browser(browser, stats, binary, urls,
         raise Exception("Unhandled browser: %s" % browser)
 
 
-def test_browsers(browsers, setup, test_sites,
+def test_browsers(browsers, conf_file, setup, test_sites,
                   per_tab_pause, settle_wait_time, proxy=None,
                   process_count=(2,4,8)):
+
+    stats = ProcessStatsHelper(conf_file)
+
     for browser in browsers:
         config = setup[mozinfo.os][browser]
-        stats = ProcessStats(config['path_filter'], config['parent_filter'])
         binary = config['binary']
+        stats.set_browser(browser)
 
         test_browser(browser, stats, binary, test_sites,
                      per_tab_pause, settle_wait_time, proxy,
                      process_count)
-
 
 def main():
     # Default path to the config file containing the SETUP and TEST_SITES vars.
@@ -115,7 +117,7 @@ def main():
     if cmdline.quick and len(TEST_SITES) > 3:
         TEST_SITES = TEST_SITES[:3]
 
-    test_browsers(cmdline.browsers, SETUP, TEST_SITES,
+    test_browsers(cmdline.browsers, cmdline.conf_file, SETUP, TEST_SITES,
                   cmdline.per_tab_pause, cmdline.settle_wait_time,
                   cmdline.proxy, cmdline.process_count)
 

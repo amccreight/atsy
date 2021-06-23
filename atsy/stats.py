@@ -2,11 +2,14 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import mozinfo
-import psutil
+import argparse
 import io
-from subprocess import Popen, PIPE
+import mozinfo
+import os
+import psutil
+import subprocess
 
+from subprocess import Popen, PIPE
 
 class ProcessNotFoundException(Exception):
     """
@@ -97,35 +100,73 @@ class ProcessStats:
 
         print(("\nTotal: {:,} bytes\n".format(parent_rss + children_uss)))
 
+class ProcessStatsHelper:
+    """
+    Helper class to run ProcessStats in a separate process, because it needs to
+    be run with sudo (maybe only in OSX?) and we can't run Firefox with sudo.
+    """
+
+    def __init__(self, conf_file):
+        self.browser = None
+        self.conf_file = conf_file
+
+        # XXX Only needed on OSX?
+        self.need_sudo = mozinfo.os == "mac"
+
+        # Update the cached credentials before we start the browser.
+        if self.need_sudo:
+            print("Requesting sudo now so we can use it later without prompting when we're measuring memory.")
+            subprocess.run(["sudo", "-v"])
+
+    def set_browser(self, browser):
+        self.browser = browser
+
+    def print_stats(self):
+        # XXX We don't need to use subprocess.run unless sudo is required, but maybe
+        # leave it like this for simplicity?
+
+        if self.need_sudo:
+            commands = ["sudo", "-n"]
+        else:
+            commands = []
+
+        # Need to call set_browser first.
+        assert self.browser
+
+        commands.extend(["python", os.path.realpath(__file__),
+                         "-b", self.browser,
+                         "-c", self.conf_file])
+
+        result = subprocess.run(commands, capture_output=True)
+        print(result.stdout.decode("utf-8"))
+        if result.stderr:
+            print("Subprocess error:")
+            print(result.stderr.decode("utf-8"))
+
+
 if __name__ == "__main__":
-    # Simple adhoc test, not meant to really be used.
 
-    if mozinfo.os == "win":
-        # Test firefox
-        stats = ProcessStats(lambda x: "Nightly" in x,
-                             lambda x: "firefox.exe" in x)
-        stats.print_stats()
+    # Default path to the config file containing the SETUP var.
+    default_config = os.path.join(
+            os.path.dirname(__file__), 'comp_analysis_conf_simple.py')
 
-        # Test chrome
-        stats = ProcessStats(lambda x: "Chrome SxS" in x,
-                             lambda x: "/prefetch" not in x)
-        stats.print_stats()
-    elif mozinfo.os == "linux":
-        # Test firefox
-        stats = ProcessStats(lambda x: "firefox-trunk" in x,
-                             lambda x: "plugin-container" not in x)
-        stats.print_stats()
-    elif mozinfo.os == "mac":
-        # Get stats for any Chrome processes that are already running.
-        # I'm not sure what the AlertNotificationService is, but I guess I'll just take the USS for it.
-        stats = ProcessStats(lambda x: 'Google Chrome.app' in x,
-                             lambda x: 'Helpers' not in x and 'AlertNotificationService' not in x)
+    # Default browser to test.
+    default_browser = 'Firefox'
 
-        # The simplest test is running it on this process:
-        #stats = ProcessStats(lambda x: 'Python' in x,
-        #                     lambda x: True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-b', action='store', dest='browser',
+                        default=default_browser,
+                        help='Adds a browser to the list of browsers to test.')
+    parser.add_argument('-c', action='store', dest='conf_file',
+                        default=default_config,
+                        help='A Python file containing the test configuration.')
 
-        stats.print_stats()
+    cmdline = parser.parse_args()
 
-    else:
-        raise Exception("Implement adhoc test for " + mozinfo.os)
+    # This loads |SETUP|.
+    out = {}
+    exec(compile(open(cmdline.conf_file, "rb").read(), cmdline.conf_file, 'exec'), {}, out)
+
+    config = out['SETUP'][mozinfo.os][cmdline.browser]
+    stats = ProcessStats(config['path_filter'], config['parent_filter'])
+    stats.print_stats()
