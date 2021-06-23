@@ -23,7 +23,7 @@ SETUP = {
     'mac': {
         'Firefox': {
             'binary': '/Applications/Firefox Nightly.app/Contents/MacOS/firefox',
-            'parent_filter': lambda x: not 'NightlyCP' in x,
+            'parent_filter': lambda x: not 'plugin-container' in x,
             'path_filter': lambda x: '/Firefox Nightly.app/' in x
         },
         'Chrome': {
